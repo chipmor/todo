@@ -1,0 +1,5 @@
+todo/__pycache__/
+web/__pychace__/
+#.idea/inspectionProfiles
+.idea/
+db.sqlite3
