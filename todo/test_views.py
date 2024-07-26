@@ -10,7 +10,7 @@ from todo.views import TodoViews
 class TestTodoView():
     url = '/api/todo'
 
-    def test_get_200_response(self):
+    def test_get_returns_200_response(self):
         client = Client()
         response = client.get(self.url)
         assert response.status_code == 200
