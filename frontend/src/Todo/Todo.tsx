@@ -1,10 +1,12 @@
-interface TodoProps {
+import React from 'react';
+
+interface Todo {
     id: number;
     title: string;
     description: string;
 }
 
-const Todo = (props: TodoProps) => {
+const TodoComponent = (props: Todo) => {
     const {id, title, description} = props;
 
     return (
@@ -17,5 +19,6 @@ const Todo = (props: TodoProps) => {
 };
 
 export {
-    Todo
+    Todo,
+    TodoComponent
 };
