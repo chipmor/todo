@@ -13,6 +13,7 @@ const HeaderContent = styled("div")({
 });
 
 const Header = () => {
+    // const {isLoggedIn} = useContext(AuthContext);
     const isLoggedIn = false;
     return (
         <HeaderContent>

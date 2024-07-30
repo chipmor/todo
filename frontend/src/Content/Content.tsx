@@ -1,32 +1,37 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Todo } from '../Todo/Todo';
+import React from "react";
+import {Todo, TodoComponent} from '../Todo/Todo';
+import styled from "@emotion/styled";
+import {Button, Typography} from "@mui/material";
+import {useTodos} from "../contexts/TodoContext";
+
+const ContentContainer = styled("div")({
+    margin: "1em",
+});
+
 
 const Content = () => {
-    const [todos, setTodos] = useState<Todo[]>([]);
+    const [newTodo, setNewTodo] = React.useState(false);
 
-
-    useEffect(() => {
-        axios.get('/api/todos').then((response) => {
-            setTodos(response.data?.todos);
-        }).catch((e: any) => {
-            console.error('there was an error fetching the data');
-        });
-    });
-
+    const { todos} = useTodos();
     return (
-        <div>
-            <h1>My To-Do List</h1>
+        <ContentContainer>
+            <div style={{display: "flex"}}>
+                <Typography variant="h5">My To-Do List</Typography>
+                <Button onClick={() => setNewTodo(true)} style={{marginRight: "1em"}}>Add Todo</Button>
+            </div>
+            {newTodo && <TodoComponent id={null} title={null} description={null} /> }
             {todos.map((todo: Todo) => {
-                return (<div>
-                    <span>id: {todo.id}</span>
-                    <span>title: {todo.title}</span>
-                    <span>description: {todo.description}</span>
-                </div>)
+                const {id, title, description} = todo;
+
+                return <TodoComponent
+                    key={id}
+                    id={id}
+                    title={title}
+                    description={description}/>
             })}
-        </div>
+        </ContentContainer>
 
     )
 }
 
-export { Content };
+export {Content};
