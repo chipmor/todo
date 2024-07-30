@@ -15,11 +15,9 @@ class TodoViews(APIView):
         description = data.get('description')
         try:
             todo = todo_service.create_todo(title, description)
-        # error handling here
-        except Exception as e:
-            print('uh oh')
+        except ValueError as e:
             return JsonResponse({'error': 'failed to create todo'}, status=400)
-        return JsonResponse({todo: todo})
+        return JsonResponse({"todo": todo}, status=201)
 
 
     # def put(self, request):
