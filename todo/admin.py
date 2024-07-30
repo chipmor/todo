@@ -4,7 +4,7 @@ from todo.models import Todo
 
 
 class TodoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'description', 'is_done')
+    list_display = ('id', 'title', 'description')
     ordering = ['id']
 
 

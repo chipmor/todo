@@ -9,9 +9,23 @@ def get_all_todos():
             'id': todo.id,
             'title': todo.title,
             'description': todo.description,
-            'is_done': todo.is_done
          } for todo in todos
     ]
-    # implement with serializers
-    # serialized_todos = TodoSerializer(todos)
-    # return serialized_todos.data
+
+
+def create_todo(title, description):
+    if not title or not description:
+        raise ValueError('Title and description cannot be empty')
+
+    return Todo.objects.create(title=title, description=description)
+
+
+def update_todo(todo_id, title, description):
+    if not title or not description:
+        raise ValueError('Title and description cannot be empty')
+
+    return Todo.objects.filter(id=todo_id).update(title=title, description=description)
+
+
+def delete_todo(todo_id):
+    return Todo.objects.filter(id=todo_id).delete()
