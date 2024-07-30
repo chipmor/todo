@@ -1,11 +1,17 @@
 import React, {useState} from 'react';
 import {Button, FormControl, Input, Typography} from "@mui/material";
 import styled from "@emotion/styled";
+import {useTodo} from "../contexts/TodoContext";
 
 interface Todo {
     id: number | null;
     title: string | null;
     description: string | null;
+}
+
+interface TodoComponentProps {
+    todo: Todo;
+    createNewTodo?: (todo: Partial<Todo>) => Promise<void>;
 }
 
 const TodoContainer = styled("div")({
@@ -16,17 +22,28 @@ const TodoContainer = styled("div")({
     position: "relative"
 });
 
-const TodoComponent = (props: Todo) => {
-    const [title, setTitle] = useState(props.title);
-    const [description, setDescription] = useState(props.description);
-    const [isEditing, setIsEditing] = useState(!props.id);
+const TodoComponent = (props: TodoComponentProps) => {
 
-    const toggleEdit = () => {
-        setIsEditing(isEditing => !isEditing);
+    const [title, setTitle] = useState(props?.todo?.title);
+    const [description, setDescription] = useState(props?.todo?.description);
+    const [isEditing, setIsEditing] = useState(!props.todo);
+
+    const {getAllTodos, updateTodo, deleteTodo} = useTodo();
+
+    const handleDelete = async () => {
+        await deleteTodo(props.todo.id);
+        await getAllTodos();
     }
 
-    const deleteTodo = () => {
-
+    const handleSave = async () => {
+        // if no todo it's new
+        if (!props.todo) {
+            await props.createNewTodo({title, description});
+        } else {
+            await updateTodo({id: props.todo.id, title, description});
+        }
+        setIsEditing(false);
+        await getAllTodos();
     }
 
     return (
@@ -57,15 +74,17 @@ const TodoComponent = (props: Todo) => {
                     width: "calc(100% - 23vh)"
                 }}>
                     <FormControl fullWidth={true}>
-                        <Input value={title} onChange={(e) => setTitle(e.target.value)}/>
+                        <Input inputProps={{"aria-label": "title"}}
+                               value={title}
+                               onChange={(e) => setTitle(e.target.value)}/>
                     </FormControl>
                     <FormControl fullWidth={true}>
-                        <Input value={description} onChange={(e) => setDescription(e.target.value)}/>
+                        <Input inputProps={{"aria-label": "description"}}
+                               value={description}
+                               onChange={(e) => setDescription(e.target.value)}/>
                     </FormControl>
                 </div>
             )}
-            {/*<EditableField isEditing={isEditing} name={"Title: "} value={title} setValue={setTitle}/>*/}
-            {/*<EditableField isEditing={isEditing} name={"Description: "} value={description} setValue={setDescription}/>*/}
             <div style={{
                 display: "flex",
                 flexDirection: "column",
@@ -74,8 +93,19 @@ const TodoComponent = (props: Todo) => {
                 right: "0",
 
             }}>
-                <Button color="primary" onClick={toggleEdit}>{isEditing ? 'Save' : 'Edit'}</Button>
-                <Button color="warning" onClick={deleteTodo}>Delete</Button>
+                {!isEditing
+                    ? (<Button
+                        color="primary"
+                        onClick={() => setIsEditing(isEditing => !isEditing)}>
+                        Edit
+                    </Button>)
+                    : (<Button
+                        color="primary"
+                        onClick={handleSave}>
+                        Save
+                    </Button>)}
+
+                <Button color="warning" onClick={handleDelete}>Delete</Button>
             </div>
         </TodoContainer>
     );

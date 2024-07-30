@@ -2,7 +2,7 @@ import React from "react";
 import {Todo, TodoComponent} from '../Todo/Todo';
 import styled from "@emotion/styled";
 import {Button, Typography} from "@mui/material";
-import {useTodos} from "../contexts/TodoContext";
+import {useTodo} from "../contexts/TodoContext";
 
 const ContentContainer = styled("div")({
     margin: "1em",
@@ -11,23 +11,34 @@ const ContentContainer = styled("div")({
 
 const Content = () => {
     const [newTodo, setNewTodo] = React.useState(false);
+    const {todos, createTodo} = useTodo();
 
-    const { todos} = useTodos();
+    const toggleAdd = () => {
+        setNewTodo(newTodo => !newTodo);
+    }
+
+    const saveNewTodo = async (todo: Partial<Todo>) => {
+        const {title, description} = todo;
+        await createTodo({title, description});
+        setNewTodo(false);
+    }
+
+    const noop = async () => {
+        return Promise.resolve()
+    };
+
     return (
         <ContentContainer>
             <div style={{display: "flex"}}>
                 <Typography variant="h5">My To-Do List</Typography>
-                <Button onClick={() => setNewTodo(true)} style={{marginRight: "1em"}}>Add Todo</Button>
+                <Button onClick={toggleAdd} style={{marginRight: "1em"}}>Add Todo</Button>
             </div>
-            {newTodo && <TodoComponent id={null} title={null} description={null} /> }
-            {todos.map((todo: Todo) => {
-                const {id, title, description} = todo;
-
+            {newTodo && <TodoComponent todo={null}
+                                       createNewTodo={(todo: Partial<Todo>) => saveNewTodo(todo)}/>}
+            {todos.map(({id, title, description}: Todo) => {
                 return <TodoComponent
                     key={id}
-                    id={id}
-                    title={title}
-                    description={description}/>
+                    todo={{id, title, description}}/>
             })}
         </ContentContainer>
 

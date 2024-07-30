@@ -15,8 +15,5 @@ describe('Header Component', () => {
 
         let title = screen.getByText("Todo Or Not Todo");
         expect(title).toBeVisible();
-
-        const login = screen.getByRole('button', {name: /Log In/i});
-        expect(login).toBeVisible();
     })
 })

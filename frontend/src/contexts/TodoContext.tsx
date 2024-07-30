@@ -3,21 +3,25 @@ import React, {createContext} from "react";
 
 interface TodoContextInterface {
     todos: any[];
-    setTodos: React.Dispatch<React.SetStateAction<any[]>>;
     getAllTodos: () => Promise<void>;
+    createTodo: (todo: Partial<Todo>) => Promise<void>;
+    updateTodo: (todo: Todo) => Promise<void>;
+    deleteTodo: (id: number) => Promise<void>;
 }
 
 const defaultTodoContext: TodoContextInterface = {
     todos: [],
-    setTodos: (todos: Todo[]) => {},
     getAllTodos: () => Promise.resolve(),
+    createTodo: (todo: Partial<Todo>) => Promise.resolve(),
+    updateTodo: (todo: Todo) => Promise.resolve(),
+    deleteTodo: (id: number) => Promise.resolve(),
 };
 
 const TodoContext = createContext<TodoContextInterface>(defaultTodoContext);
+const useTodo = () => React.useContext(TodoContext);
 
-const useTodos = () => React.useContext(TodoContext);
 export {
-    useTodos,
+    useTodo,
     defaultTodoContext
 }
 export default TodoContext;
