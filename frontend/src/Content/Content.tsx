@@ -23,10 +23,6 @@ const Content = () => {
         setNewTodo(false);
     }
 
-    const noop = async () => {
-        return Promise.resolve()
-    };
-
     return (
         <ContentContainer>
             <div style={{display: "flex"}}>

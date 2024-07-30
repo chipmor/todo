@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React from 'react';
 import { ThemeProvider } from "@mui/material";
 
 import { Header } from "./Header/Header";
