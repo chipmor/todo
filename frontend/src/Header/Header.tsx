@@ -6,7 +6,7 @@ const HeaderContent = styled("div")({
     display: "flex",
     padding: "1em 2em",
     backgroundColor: "#CCD7E1FF",
-    height: "15vh",
+    height: "10vh",
     color: "black",
     alignItems: "center",
     justifyContent: "flex-start",

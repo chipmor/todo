@@ -1,0 +1,7 @@
+- [ ] Lists
+  - UI sidebar
+  - Database
+  - endpoint
+  - update todo api call
+- Find Todo website and copy their UI for todos & other shit
+  - Or get better styling options from mui

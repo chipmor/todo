@@ -11,7 +11,10 @@ const renderContent = () => {
 
 const mockTodoProvider = () => {
     (useTodo as jest.Mock).mockReturnValue({
-        todos: [{id: 1, title: 'test1', description: 'test_d1'}, {id: 2, title: 'test2', description: 'test_d2'}],
+        todos: [
+            {id: 1, title: 'test1', description: 'test_d1'},
+            {id: 2, title: 'test2', description: 'test_d2'}
+        ],
         getAllTodos: () => { // @ts-ignore
             return this?.todos
         },

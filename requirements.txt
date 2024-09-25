@@ -1,0 +1,4 @@
+django
+django-cors-headers
+django_rest_framework
+pytest
