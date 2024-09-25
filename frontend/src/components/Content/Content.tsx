@@ -6,7 +6,8 @@ import {useTodo} from "../contexts/TodoContext";
 
 const ContentContainer = styled("div")({
   margin: "1em",
-  flex: 1
+  flex: 1,
+  display: "flex"
 });
 
 

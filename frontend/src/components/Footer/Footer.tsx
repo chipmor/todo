@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "@emotion/styled";
-import {Link, Typography} from "@mui/material";
+import { Typography } from "@mui/material";
 
 const Footer = () => {
   const FooterContainer = styled('div')({
@@ -14,7 +14,6 @@ const Footer = () => {
   return (
     <FooterContainer>
       <Typography variant="subtitle1">Chip Morrow: chipmorrow94@gmail.com</Typography>
-
       <Typography variant="subtitle1">
         <a target="_blank" href="https://www.linkedin.com/in/chipmorrow">www.linkedin.com/in/chipmorrow</a>
       </Typography>

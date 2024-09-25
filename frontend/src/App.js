@@ -1,11 +1,11 @@
 import React from 'react';
 import { ThemeProvider } from "@mui/material";
 
-import { Header } from "./Header/Header";
-import { Content } from "./Content/Content";
+import { Header } from "./components/Header/Header";
+import { Content } from "./components/Content/Content";
 import theme from "./Theme";
-import TodoProvider from "./contexts/TodoProvider";
-import Footer from './Footer/Footer';
+import TodoProvider from "./components/contexts/TodoProvider";
+import Footer from './components/Footer/Footer';
 import styled from '@emotion/styled';
 
 
