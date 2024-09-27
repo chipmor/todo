@@ -1,4 +1,4 @@
-import {Todo} from "../Todo/Todo";
+import {Todo} from "../TodoCard/TodoCard";
 import React, {createContext} from "react";
 
 interface TodoContextInterface {

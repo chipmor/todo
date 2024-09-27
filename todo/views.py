@@ -9,14 +9,14 @@ from todo.todo_service import update_todo, delete_todo
 class TodoViews(APIView):
     def get(self, request):
         todos = todo_service.get_all_todos()
+        # print(len(todos))
         return JsonResponse({"todos": todos})
 
     def post(self, request):
         data = request.data
-        title = data.get("title")
         description = data.get("description")
         try:
-            todo = todo_service.create_todo(title, description)
+            todo = todo_service.create_todo(description)
         except ValueError as e:
             return JsonResponse({"error": "failed to create todo"}, status=400)
         return JsonResponse({"todo": todo}, status=201)
@@ -24,15 +24,21 @@ class TodoViews(APIView):
 
     def put(self, request):
         data = request.data
-        todo_id = data.get("id")
-        title = data.get("title")
+        todo_id = int(data.get("id"))
         description = data.get("description")
         try:
-            update_todo(todo_id, title, description)
-        except ValueError as e:
-            return JsonResponse({"error": "failed to update todo"}, status=400)
+            result = update_todo(todo_id, description)
+            return JsonResponse(result, status=202)
+            print(description)
+        except (ValueError, TypeError, Todo.DoesNotExist) as e:
+            if e is TypeError:
+                return JsonResponse({"error": "failed to update todo"}, status=400)
+            elif e is ValueError:
+                return JsonResponse(status=405)
 
-        return JsonResponse({"id": todo_id}, status=200)
+
+
+        return JsonResponse({"id": todo_id, "description": description}, status=200)
 
     def delete(self, request, todo_id):
         delete_todo(todo_id)

@@ -17,16 +17,20 @@ def create_todo(title, description):
     validate_title(title)
     validate_description(description)
 
-    todo = Todo.objects.create(title=title, description=description)
-    return {"id": todo.id, "title": title, "description": description}
+    todo = Todo.objects.create(description=description)
+    return {"id": todo.id, "description": description}
 
 
-def update_todo(todo_id, title, description):
-    validate_title(title)
+def update_todo(todo_id, description):
     validate_description(description)
+    try:
+        to_update = Todo.objects.get(id=todo_id)
+        to_update.description = description
+        to_update.save()
+    except Exception as e:
+        raise Todo.DoesNotExist("Unable to find Todo with id: " + todo_id)
 
-    Todo.objects.filter(id=todo_id).update(title=title, description=description)
-    return {"id": todo_id, "title": title, "description": description}
+    return {"id": todo_id, "description": description}
 
 
 def delete_todo(todo_id):

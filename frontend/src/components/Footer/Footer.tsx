@@ -13,9 +13,9 @@ const Footer = () => {
 
   return (
     <FooterContainer>
-      <Typography variant="subtitle1">Chip Morrow: chipmorrow94@gmail.com</Typography>
+      <Typography variant="subtitle1">Created by: Chip Morrow -- chipmorrow94@gmail.com</Typography>
       <Typography variant="subtitle1">
-        <a target="_blank" href="https://www.linkedin.com/in/chipmorrow">www.linkedin.com/in/chipmorrow</a>
+        <a target="_blank" rel="noreferrer" href="https://www.linkedin.com/in/chipmorrow">www.linkedin.com/in/chipmorrow</a>
       </Typography>
     </FooterContainer>);
 }
