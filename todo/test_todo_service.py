@@ -14,8 +14,8 @@ class TestGetAllTodo:
         assert todos
 
         assert len(todos) == 2
-        assert(todos[0].get("title") == "test")
-        assert(todos[1].get("title") == "test2")
+        assert(todos[0].get("description") == "test")
+        assert(todos[1].get("description") == "test2")
 
     def test_returns_empty_list(self):
         assert Todo.objects.count() == 0

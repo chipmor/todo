@@ -1,25 +1,27 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Button, Card, CardContent, Checkbox, FormControl, Input, Typography} from "@mui/material";
+import React, {useRef, useState} from 'react';
+import {Button, Card, CardContent, Checkbox, Input} from "@mui/material";
 import {useTodo} from "../contexts/TodoContext";
 
 interface Todo {
-  id: number | null;
-  description: string | null;
+  id: number;
+  description: string;
+  completed: boolean;
 }
 
 interface TodoComponentProps {
   todo: Todo;
-  // createNewTodo?: (todo: Partial<Todo>) => Promise<void>;
 }
 
 
 const TodoCard = (props: TodoComponentProps) => {
   const {todo} = props;
   const [description, setDescription] = useState(todo?.description);
+  const [isDone, setIsDone] = useState(todo?.completed);
   const [isEditing, setIsEditing] = useState(!props.todo);
+  const inputRef = useRef(null);
 
   const {getAllTodos, updateTodo, deleteTodo} = useTodo();
-  const inputRef = useRef(null);
+
 
   const handleDelete = async () => {
     await deleteTodo(props.todo.id);
@@ -28,32 +30,27 @@ const TodoCard = (props: TodoComponentProps) => {
 
   const handleSave = async () => {
     if (todo.id) {
-      console.log(description)
-      await updateTodo({id: todo.id, description});
+      await updateTodo({id: todo.id, description, completed: isDone});
       setIsEditing(false);
     }
   }
 
   const handleEdit = (e: React.MouseEvent) => {
-    // e.preventDefault();
-    // e.stopPropagation();
-    console.log('enter')
     setIsEditing(true);
   }
 
-  const handleLeave = (e: React.MouseEvent) => {
-    e.preventDefault();
-    console.log('leave')
-    if (inputRef.current) {
-
+  const updateDone = async () => {
+    if (todo.id) {
+      await updateTodo({id: todo.id, description, completed: !isDone});
     }
-    setIsEditing(false);
+    setIsDone(isDone => !isDone);
+
   }
 
   return (
     <Card sx={{margin: "4px 0"}}>
       <CardContent sx={{display: 'flex'}}>
-        <Checkbox />
+        <Checkbox checked={isDone} value={isDone} onChange={updateDone}/>
         {isEditing &&
           <>
             <Input

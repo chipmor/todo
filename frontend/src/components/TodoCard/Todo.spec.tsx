@@ -11,8 +11,9 @@ describe('Todo Component', () => {
     const id = 1;
     const title = "test title";
     const description = "test description";
+    const completed = false;
 
-    renderTodo({id, description});
+    renderTodo({id, description, completed});
 
     expect(screen.getByText(title)).toBeVisible();
     expect(screen.getByText(description)).toBeVisible();
@@ -22,7 +23,7 @@ describe('Todo Component', () => {
   });
   describe('edit mode', () => {
     it('enables editing when edit button is clicked', () => {
-      renderTodo({id: 1, description: 'test description'});
+      renderTodo({id: 1, description: 'test description', completed: false});
 
       const editButton = screen.getByRole('button', {name: /Edit/i});
       expect(editButton).toBeVisible();

@@ -25,12 +25,10 @@ const TodoList = () => {
         <Button onClick={toggleAdd} style={{marginRight: "1em"}}>Add Todo</Button>
       </div>
       <div>
-        {/*{newTodo &&*/}
-        {/*  <TodoCard todo={null} />}*/}
-        {todos.map(({id, description}: Todo) => {
+        {todos.map(({id, description, completed}: Todo) => {
           return <TodoCard
             key={id}
-            todo={{id, description}}/>
+            todo={{id, description, completed}} />
         })}
       </div>
     </div>

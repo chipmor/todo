@@ -23,16 +23,12 @@ const mockTodoProvider = () => {
 
 describe('Content Component', () => {
   it('renders all todos', async () => {
-    const title1 = 'test1';
-    const title2 = 'test2';
     const description1 = 'test_d1';
     const description2 = 'test_d2';
 
     mockTodoProvider();
     renderContent();
 
-    expect(screen.getByText(title1)).toBeVisible();
-    expect(screen.getByText(title2)).toBeVisible();
     expect(screen.getByText(description2)).toBeVisible();
     expect(screen.getByText(description1)).toBeVisible();
   });

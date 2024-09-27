@@ -10,7 +10,7 @@ const TodoProvider = ({children}) => {
   const getAllTodos = async () => {
     try {
       const response = await axios.get(urlBase + '/api/todo');
-      // console.log(response.data);
+      console.log(response.data);
       setTodos(response.data?.todos);
     } catch (e: any) {
       console.error('there was an error fetching the data: ', e);
@@ -28,7 +28,7 @@ const TodoProvider = ({children}) => {
 
   const updateTodo = async (todo: Todo) => {
     try {
-      await axios.put(urlBase + '/api/todo', {id: todo.id, description: todo.description});
+      await axios.put(urlBase + '/api/todo', {id: todo.id, description: todo.description, completed: todo.completed});
     } catch (e) {
       console.error('there was an error updating a todo', todo);
     }

@@ -8,29 +8,29 @@ def get_all_todos():
 
     return [{
         "id": todo.id,
-        "title": todo.title,
         "description": todo.description,
+        "completed": todo.is_completed,
     } for todo in todos]
 
 
-def create_todo(title, description):
-    validate_title(title)
+def create_todo(description):
     validate_description(description)
 
-    todo = Todo.objects.create(description=description)
-    return {"id": todo.id, "description": description}
+    todo = Todo.objects.create(description=description, is_completed=False)
+    return {"id": todo.id, "description": todo.description, "completed": todo.is_completed}
 
 
-def update_todo(todo_id, description):
+def update_todo(todo_id, description, completed):
     validate_description(description)
     try:
         to_update = Todo.objects.get(id=todo_id)
         to_update.description = description
+        to_update.is_completed = completed
         to_update.save()
     except Exception as e:
         raise Todo.DoesNotExist("Unable to find Todo with id: " + todo_id)
 
-    return {"id": todo_id, "description": description}
+    return {"id": todo_id, "description": description, "completed": completed}
 
 
 def delete_todo(todo_id):
