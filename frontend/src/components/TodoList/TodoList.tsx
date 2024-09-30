@@ -1,12 +1,13 @@
 import React from "react";
-import {useTodo} from "../../contexts/TodoContext";
 import {Todo, TodoCard} from "../TodoCard/TodoCard";
 import {Button, Typography} from "@mui/material";
-
-const TodoList = () => {
-
+interface TodoListProps {
+  todos: Todo[];
+  getAllTodos: () => Promise<void>;
+}
+const TodoList = (props: TodoListProps) => {
+  const {todos, getAllTodos} = props;
   const [newTodo, setNewTodo] = React.useState<Partial<Todo>>(null);
-  const {todos, getAllTodos} = useTodo();
 
   const toggleAdd = () => {
     setNewTodo(!newTodo ? {id: null, description: "", completed: false} : null);

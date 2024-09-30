@@ -22,9 +22,11 @@ const mockTodoProvider = () => {
 }
 
 describe('Content Component', () => {
-  it('renders all todos', async () => {
+  it('renders all todos and all lists', async () => {
     const description1 = 'test_d1';
     const description2 = 'test_d2';
+    const list1 = 'test_l1';
+    const list2 = 'test_l2';
 
     mockTodoProvider();
     renderContent();
