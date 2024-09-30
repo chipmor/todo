@@ -2,9 +2,9 @@ import React from 'react';
 import {render, screen} from "@testing-library/react";
 
 import {Content} from "./Content";
-import TodoContext, {useTodo} from "../contexts/TodoContext";
+import TodoContext, {useTodo} from "../../contexts/TodoContext";
 
-jest.mock("../contexts/TodoContext");
+jest.mock("../../contexts/TodoContext");
 const renderContent = () => {
   render(<Content/>)
 };

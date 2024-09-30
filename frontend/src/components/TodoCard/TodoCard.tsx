@@ -1,6 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {Button, Card, CardContent, Checkbox, Input} from "@mui/material";
-import {useTodo} from "../contexts/TodoContext";
+import {useTodo} from "../../contexts/TodoContext";
 
 interface Todo {
   id: number;
@@ -9,34 +9,34 @@ interface Todo {
 }
 
 interface TodoComponentProps {
-  todo: Todo;
+  todo: Partial<Todo>;
+  resetTodos: () => Promise<void>;
 }
 
 
 const TodoCard = (props: TodoComponentProps) => {
-  const {todo} = props;
+  const {todo, resetTodos} = props;
   const [description, setDescription] = useState(todo?.description);
   const [isDone, setIsDone] = useState(todo?.completed);
-  const [isEditing, setIsEditing] = useState(!props.todo);
+  const [isEditing, setIsEditing] = useState(!props.todo.id);
   const inputRef = useRef(null);
 
-  const {getAllTodos, updateTodo, deleteTodo} = useTodo();
+  const {createTodo, updateTodo, deleteTodo} = useTodo();
 
 
   const handleDelete = async () => {
-    await deleteTodo(props.todo.id);
-    await getAllTodos();
+    await deleteTodo(todo.id);
+    await resetTodos();
   }
 
   const handleSave = async () => {
     if (todo.id) {
       await updateTodo({id: todo.id, description, completed: isDone});
       setIsEditing(false);
+    } else {
+      await createTodo(description);
+      await resetTodos();
     }
-  }
-
-  const handleEdit = (e: React.MouseEvent) => {
-    setIsEditing(true);
   }
 
   const updateDone = async () => {
@@ -44,11 +44,10 @@ const TodoCard = (props: TodoComponentProps) => {
       await updateTodo({id: todo.id, description, completed: !isDone});
     }
     setIsDone(isDone => !isDone);
-
   }
 
   return (
-    <Card sx={{margin: "4px 0"}}>
+    <Card sx={{margin: "4px 0"}} data-testid={`todo-${todo.id}`} >
       <CardContent sx={{display: 'flex'}}>
         <Checkbox checked={isDone} value={isDone} onChange={updateDone}/>
         {isEditing &&
@@ -62,9 +61,12 @@ const TodoCard = (props: TodoComponentProps) => {
           </>
         }
         {!isEditing &&
-          <span style={{width: "100%", alignContent: "center"}} onClick={handleEdit}>
+          <>
+          <span style={{width: "100%", alignContent: "center"}} onClick={() => setIsEditing(true)}>
             {description}
           </span>
+            <Button variant='outlined' color='warning' onClick={handleDelete}>Delete</Button>
+          </>
         }
       </CardContent>
     </Card>

@@ -1,40 +1,153 @@
-import React from 'react';
+import React, {act} from 'react';
 import {Todo, TodoCard} from "./TodoCard";
-import {fireEvent, render, screen} from "@testing-library/react";
+import {fireEvent, render, screen, waitFor} from "@testing-library/react";
+import TodoContext from "../../contexts/TodoContext";
 
-const renderTodo = (todo: Todo, callback = undefined) => {
-  render(<TodoCard todo={todo} />);
+const defaultTodo: Todo = {
+  id: 1,
+  description: "test description",
+  completed: false
+}
+const renderTodo = (todo: Todo = defaultTodo) => {
+  render(<TodoCard todo={todo} resetTodos={jest.fn()}/>);
+}
+
+const renderWithProvider = (
+  todo: Todo = defaultTodo,
+  hookOverrides = {}
+) => {
+  const myMocks = {
+    get: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+    deleteFn: jest.fn(),
+    ...hookOverrides
+  }
+  render(
+    <TodoContext.Provider value={{
+      todos: [],
+      getAllTodos: myMocks.get,
+      createTodo: myMocks.create,
+      deleteTodo: myMocks.deleteFn,
+      updateTodo: myMocks.update
+    }}>
+      <TodoCard todo={todo} resetTodos={jest.fn()}/>
+    </TodoContext.Provider>)
 }
 
 describe('Todo Component', () => {
-  it('renders expected props and buttons by default in view mode', () => {
+  it('displays description', () => {
     const id = 1;
-    const title = "test title";
     const description = "test description";
-    const completed = false;
-
+    const completed = true;
     renderTodo({id, description, completed});
 
-    expect(screen.getByText(title)).toBeVisible();
     expect(screen.getByText(description)).toBeVisible();
-
-    expect(screen.getByRole('button', {name: "Edit"})).toBeVisible();
-    expect(screen.getByRole('button', {name: "Delete"})).toBeVisible();
   });
-  describe('edit mode', () => {
-    it('enables editing when edit button is clicked', () => {
-      renderTodo({id: 1, description: 'test description', completed: false});
+  it('displays checkbox with value', () => {
+    const id = 1;
+    const description = "test description";
+    const completed = true;
+    renderTodo({id, description, completed});
 
-      const editButton = screen.getByRole('button', {name: /Edit/i});
-      expect(editButton).toBeVisible();
-      fireEvent.click(editButton);
+    const checkbox = screen.getByRole('checkbox');
+    // @ts-ignore
+    expect(checkbox.value).toBe("true");
+  });
+  it('displays delete button', () => {
+    const id = 1;
+    const description = "test description";
+    const completed = true;
+    renderTodo({id, description, completed});
 
-      const saveButton = screen.getByRole('button', {name: /Save/i});
-      expect(saveButton).toBeVisible();
-      const titleInput = screen.getByRole('textbox', {name: /Title/i});
-      expect(titleInput).toBeVisible();
-      const descriptionInput = screen.getByRole('textbox', {name: /Description/i});
-      expect(descriptionInput).toBeVisible();
+    const deleteButton = screen.getByText(/delete/i);
+    expect(deleteButton).toBeVisible();
+  });
+
+  describe("edit mode", () => {
+    it("displays input for description", () => {
+      renderTodo();
+
+      const todo = screen.getByText("test description");
+      fireEvent.click(todo);
+
+      const todoInput = screen.getByRole("textbox");
+      expect(todoInput).toHaveValue("test description")
     });
-  });
+    it("displays save button", () => {
+      renderTodo();
+
+      const todo = screen.getByText("test description");
+      fireEvent.click(todo);
+
+      const save = screen.getByText(/save/i);
+      expect(save).toBeVisible();
+    });
+  })
+
+  describe("actions", () => {
+    it("calls update when checkbox is clicked", async () => {
+      const mockUpdate = jest.fn();
+      const mockTodo: Todo = {
+        id: 1,
+        description: 'test',
+        completed: false
+      }
+
+      renderWithProvider(mockTodo, {update: mockUpdate});
+
+      const checkbox = screen.getByRole('checkbox');
+
+      fireEvent.click(checkbox);
+      await waitFor(() => {
+        // @ts-ignore
+        expect(checkbox.value).toBe("true")
+      });
+      expect(mockUpdate).toHaveBeenCalledWith({
+        id: mockTodo.id,
+        description: mockTodo.description,
+        completed: !mockTodo.completed
+      });
+    });
+    it("calls delete when delete is clicked", () => {
+      const mockDelete = jest.fn();
+      const mockTodo: Todo = {
+        id: 1,
+        description: 'test',
+        completed: false
+      };
+      renderWithProvider(mockTodo, {deleteFn: mockDelete});
+
+      const deleteButton = screen.getByText(/delete/i);
+      fireEvent.click(deleteButton);
+
+      expect(mockDelete).toHaveBeenCalledWith(mockTodo.id);
+    });
+    it("calls update when save is clicked", async () => {
+      const mockUpdate = jest.fn();
+      const mockTodo = {
+        id: 1,
+        description: "test",
+        completed: true
+      };
+
+      renderWithProvider(mockTodo, {update: mockUpdate});
+
+      const todo = screen.getByText("test");
+      fireEvent.click(todo);
+
+      const todoInput = screen.getByRole("textbox");
+      fireEvent.change(todoInput, {target: {value: "updated"}});
+      await act(async () => {
+        fireEvent.click(screen.getByText(/save/i));
+      })
+
+      expect(mockUpdate).toBeCalledWith({
+        id: mockTodo.id,
+        description: "updated",
+        completed: mockTodo.completed
+      });
+    });
+
+  })
 });

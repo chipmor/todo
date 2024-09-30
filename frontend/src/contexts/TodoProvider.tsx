@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import TodoContext from "./TodoContext";
 import axios from "axios";
-import {Todo} from "../TodoCard/TodoCard";
+import {Todo} from "../components/TodoCard/TodoCard";
 
 const TodoProvider = ({children}) => {
   const urlBase = "http://localhost:8000";
@@ -17,9 +17,9 @@ const TodoProvider = ({children}) => {
     }
   }
 
-  const createTodo = async (todo: Partial<Todo>) => {
+  const createTodo = async (description: string) => {
     try {
-      await axios.post(urlBase + '/api/todo', {description: todo.description});
+      await axios.post(urlBase + '/api/todo', {description});
     } catch (error) {
       console.error('there was an error creating a new todo', error);
       throw error;

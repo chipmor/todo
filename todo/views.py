@@ -14,9 +14,8 @@ class TodoViews(APIView):
     def post(self, request):
         data = request.data
         description = data.get("description")
-        completed = data.get("completed")
         try:
-            todo = todo_service.create_todo(description, completed)
+            todo = todo_service.create_todo(description)
         except ValueError as e:
             return JsonResponse({"error": "failed to create todo"}, status=400)
 
